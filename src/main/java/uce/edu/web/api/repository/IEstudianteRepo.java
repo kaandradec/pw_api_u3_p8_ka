@@ -6,7 +6,8 @@ import java.util.List;
 
 public interface IEstudianteRepo {
 
-  public Estudiante seleccionarPorId(Integer id);
-  public List<Estudiante> seleccionarTodos();
+    public Estudiante seleccionarPorId(Integer id);
+
+    public List<Estudiante> seleccionarTodos();
 
 }
