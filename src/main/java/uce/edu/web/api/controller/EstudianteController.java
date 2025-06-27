@@ -32,22 +32,35 @@ public class EstudianteController {
     @POST
     @Path("")
     public void guardar(@RequestBody Estudiante estudiante) {
+        this.iEstudianteService.actualizarParcialPorId(estudiante);
     }
+
     @PUT
     @Path("/{id}")
-    public void actualizar(@RequestBody Estudiante estudiante, @PathParam("id") Integer id){
-
+    public void actualizarPorId(@RequestBody Estudiante estudiante, @PathParam("id") Integer id) {
+        estudiante.setId(id);
+        this.iEstudianteService.actualizarPorId(estudiante);
     }
 
     @PATCH
     @Path("/{id}")
-    public void actualizarParcial(@RequestBody Estudiante estudiante, @PathParam("id") Integer id){
+    public void actualizarParcial(@RequestBody Estudiante estudiante, @PathParam("id") Integer id) {
+        estudiante.setId(id);
 
+        Estudiante est = this.consultarPorId(id);
+        if (estudiante.getApellido() != null)
+            est.setApellido(estudiante.getApellido());
+        if (estudiante.getNombre() != null)
+            est.setNombre(estudiante.getNombre());
+        if (estudiante.getFechaNacimiento() != null)
+            est.setFechaNacimiento(estudiante.getFechaNacimiento());
+
+        this.iEstudianteService.actualizarParcialPorId(est);
     }
 
     @DELETE
     @Path("/{id}")
-    public void borrarPorId(@PathParam("id") Integer id){
-
+    public void borrarPorId(@PathParam("id") Integer id) {
+        this.iEstudianteService.borrarPorId(id);
     }
 }

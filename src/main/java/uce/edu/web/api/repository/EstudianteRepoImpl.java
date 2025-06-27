@@ -27,4 +27,28 @@ public class EstudianteRepoImpl implements IEstudianteRepo {
         return myQuery.getResultList();
     }
 
+    @Override
+    public void actualizarPorId(Estudiante estudiante) {
+        this.entityManager.merge(estudiante);
+    }
+
+    @Override
+    public void actualizarParcialPorId(Estudiante estudiante) {
+        this.entityManager.merge(estudiante);
+    }
+
+    @Override
+    public void borrarPorId(Integer id) {
+        Estudiante estudiante = this.entityManager.find(Estudiante.class, id);
+        if (estudiante == null) {
+            throw new IllegalArgumentException("No se encontró el estudiante con ID: " + id);
+        }
+        this.entityManager.remove(estudiante);
+    }
+
+    @Override
+    public void insertar(Estudiante estudiante) {
+        this.entityManager.persist(estudiante);
+    }
+
 }

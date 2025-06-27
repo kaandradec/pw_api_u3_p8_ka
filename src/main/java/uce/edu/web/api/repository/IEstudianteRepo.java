@@ -10,4 +10,12 @@ public interface IEstudianteRepo {
 
     public List<Estudiante> seleccionarTodos();
 
+    public void actualizarPorId(Estudiante estudiante);
+
+    public void actualizarParcialPorId(Estudiante estudiante);
+
+    public void borrarPorId(Integer id);
+
+    public void insertar(Estudiante estudiante);
+
 }
