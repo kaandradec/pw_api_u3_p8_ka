@@ -13,18 +13,43 @@ import java.util.List;
 @ApplicationScoped // Indicates that this class is a data repository
 public class ProfesorRepoImpl implements IProfesorRepo {
 
-  @PersistenceContext
-  private EntityManager entityManager;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-  @Override
-  public Profesor seleccionarPorId(Integer id) {
-    return this.entityManager.find(Profesor.class, id);
-  }
+    @Override
+    public Profesor seleccionarPorId(Integer id) {
+        return this.entityManager.find(Profesor.class, id);
+    }
 
-  @Override
-  public List<Profesor> seleccionarTodos() {
-    TypedQuery<Profesor> myQuery = this.entityManager.createQuery("SELECT p FROM Profesor p", Profesor.class);
-    return myQuery.getResultList();
-  }
+    @Override
+    public List<Profesor> seleccionarTodos() {
+        TypedQuery<Profesor> myQuery = this.entityManager.createQuery("SELECT p FROM Profesor p", Profesor.class);
+        return myQuery.getResultList();
+    }
+
+    @Override
+    public void insertar(Profesor profesor) {
+        this.entityManager.persist(profesor);
+    }
+
+    @Override
+    public void actualizarPorId(Profesor profesor) {
+        this.entityManager.merge(profesor);
+    }
+
+    @Override
+    public void actualizarParcialPorId(Profesor profesor) {
+        this.entityManager.merge(profesor);
+    }
+
+    @Override
+    public void borrarPorId(Integer id) {
+        Profesor p = this.seleccionarPorId(id);
+
+        if (p == null)
+            throw new IllegalArgumentException("No se encontró el profesor con ID: " + id);
+
+        this.entityManager.remove(p);
+    }
 
 }
