@@ -2,6 +2,8 @@ package uce.edu.web.api.controller;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
+
+import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import uce.edu.web.api.repository.modelo.Estudiante;
 import uce.edu.web.api.service.IEstudianteService;
@@ -22,15 +24,20 @@ public class EstudianteController {
         return this.iEstudianteService.buscarPorId(id);
     }
 
+    // ?genero=M&provincia=pichincha
     @GET
     @Path("")
-    public List<Estudiante> consultarTodos() {
-        return this.iEstudianteService.buscarTodos();
+    @Operation(summary = "Consultar Estudiantes", description = "Este endpoint permite consultar todos los estudiantes")
+    public List<Estudiante> consultarTodos(@QueryParam("genero") String genero,
+            @QueryParam("provincia") String provincia) {
+                System.out.println("Provincia query param:" + provincia);
+        return this.iEstudianteService.buscarTodos(genero);
     }
 
     // El recurso se lo envia en el body, @RequestBody opcional
     @POST
     @Path("")
+    @Operation(summary = "Guardar Estudiantes", description = "Este endpoint permite guardar un nuevo estudiante")
     public void guardar(@RequestBody Estudiante estudiante) {
         this.iEstudianteService.actualizarParcialPorId(estudiante);
     }

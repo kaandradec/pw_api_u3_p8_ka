@@ -18,6 +18,8 @@ public class Estudiante {
   private String apellido;
   @Column(name = "estu_fecha_nacimiento")
   private LocalDateTime fechaNacimiento;
+  @Column(name = "estu_genero")
+  private String genero;
 
   // SETTERS Y GETTERS
 
@@ -51,6 +53,14 @@ public class Estudiante {
 
   public void setFechaNacimiento(LocalDateTime fechaNacimiento) {
     this.fechaNacimiento = fechaNacimiento;
+  }
+
+  public String getGenero() {
+    return genero;
+  }
+
+  public void setGenero(String genero) {
+    this.genero = genero;
   }
 
 }
