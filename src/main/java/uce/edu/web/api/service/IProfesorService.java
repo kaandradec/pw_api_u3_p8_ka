@@ -10,7 +10,7 @@ public interface IProfesorService {
 
     public Profesor buscarPorId(Integer id);
 
-    public List<Profesor> buscarTodos();
+    public List<Profesor> buscarTodos(String genero);
 
     public void actualizarPorId(Profesor profesor);
 

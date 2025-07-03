@@ -1,10 +1,13 @@
 package uce.edu.web.api.repository.modelo;
 
 import jakarta.persistence.*;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@XmlRootElement
 @Entity
 @Table(name = "profesor")
 public class Profesor {
@@ -22,6 +25,8 @@ public class Profesor {
     private String email;
     @Column(name = "prof_salario")
     private BigDecimal salario;
+    @Column(name = "prof_genero")
+    private String genero;
 
     // SETTERS Y GETTERS
     public Integer getId() {
@@ -48,6 +53,7 @@ public class Profesor {
         this.apellido = apellido;
     }
 
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     public LocalDateTime getFechaNacimiento() {
         return fechaNacimiento;
     }
@@ -70,5 +76,13 @@ public class Profesor {
 
     public void setSalario(BigDecimal salario) {
         this.salario = salario;
+    }
+
+    public String getGenero() {
+        return genero;
+    }
+
+    public void setGenero(String genero) {
+        this.genero = genero;
     }
 }

@@ -8,7 +8,7 @@ public interface IProfesorRepo {
 
     public Profesor seleccionarPorId(Integer id);
 
-    public List<Profesor> seleccionarTodos();
+    public List<Profesor> seleccionarTodos(String genero);
 
     public void insertar(Profesor profesor);
 
@@ -17,6 +17,5 @@ public interface IProfesorRepo {
     public void actualizarParcialPorId(Profesor profesor);
 
     public void borrarPorId(Integer id);
-
 
 }

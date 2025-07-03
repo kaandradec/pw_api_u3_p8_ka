@@ -9,7 +9,8 @@ import uce.edu.web.api.repository.modelo.Profesor;
 
 import java.util.List;
 
-@Transactional // Indicates that this class is a component of the application and can be injected
+@Transactional // Indicates that this class is a component of the application and can be
+               // injected
 @ApplicationScoped // Indicates that this class is a data repository
 public class ProfesorRepoImpl implements IProfesorRepo {
 
@@ -22,8 +23,10 @@ public class ProfesorRepoImpl implements IProfesorRepo {
     }
 
     @Override
-    public List<Profesor> seleccionarTodos() {
-        TypedQuery<Profesor> myQuery = this.entityManager.createQuery("SELECT p FROM Profesor p", Profesor.class);
+    public List<Profesor> seleccionarTodos(String genero) {
+        TypedQuery<Profesor> myQuery = this.entityManager
+                .createQuery("SELECT p FROM Profesor p WHERE p.genero =:genero", Profesor.class);
+        myQuery.setParameter("genero", genero);
         return myQuery.getResultList();
     }
 
