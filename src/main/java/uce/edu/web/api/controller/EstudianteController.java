@@ -2,6 +2,8 @@ package uce.edu.web.api.controller;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
@@ -20,23 +22,31 @@ public class EstudianteController {
     // CAPACIDADES DEL SERVICIO
     @GET
     @Path("/{id}")
-    public Estudiante consultarPorId(@PathParam("id") Integer id) {
-        return this.iEstudianteService.buscarPorId(id);
+    @Produces(MediaType.APPLICATION_XML)
+    public Response consultarPorId(@PathParam("id") Integer id) {
+        // return this.iEstudianteService.buscarPorId(id);
+
+        return Response.status(227).entity(this.iEstudianteService.buscarPorId(id)).build();
     }
 
     // ?genero=M&provincia=pichincha
     @GET
     @Path("")
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Consultar Estudiantes", description = "Este endpoint permite consultar todos los estudiantes")
-    public List<Estudiante> consultarTodos(@QueryParam("genero") String genero,
+    public Response consultarTodos(@QueryParam("genero") String genero,
             @QueryParam("provincia") String provincia) {
-                System.out.println("Provincia query param:" + provincia);
-        return this.iEstudianteService.buscarTodos(genero);
+        System.out.println("Provincia query param:" + provincia);
+        // return this.iEstudianteService.buscarTodos(genero);
+
+        return Response.status(Response.Status.OK).entity(this.iEstudianteService.buscarTodos(genero)).build();
     }
 
     // El recurso se lo envia en el body, @RequestBody opcional
     @POST
     @Path("")
+    // @Consumes(MediaType.APPLICATION_JSON) // MediaType de Jakarta
+    @Consumes(MediaType.APPLICATION_XML) // MediaType de Jakarta
     @Operation(summary = "Guardar Estudiantes", description = "Este endpoint permite guardar un nuevo estudiante")
     public void guardar(@RequestBody Estudiante estudiante) {
         this.iEstudianteService.actualizarParcialPorId(estudiante);
@@ -54,7 +64,8 @@ public class EstudianteController {
     public void actualizarParcial(@RequestBody Estudiante estudiante, @PathParam("id") Integer id) {
         estudiante.setId(id);
 
-        Estudiante est = this.consultarPorId(id);
+        // Estudiante est = this.consultarPorId(id);
+        Estudiante est = this.iEstudianteService.buscarPorId(id);
         if (estudiante.getApellido() != null)
             est.setApellido(estudiante.getApellido());
         if (estudiante.getNombre() != null)
