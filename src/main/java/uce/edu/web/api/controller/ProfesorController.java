@@ -2,12 +2,19 @@ package uce.edu.web.api.controller;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+import uce.edu.web.api.repository.modelo.Hijo;
 import uce.edu.web.api.repository.modelo.Profesor;
 import uce.edu.web.api.service.IProfesorService;
+import uce.edu.web.api.service.to.ProfesorTo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Path("/profesores")
 public class ProfesorController {
@@ -17,10 +24,12 @@ public class ProfesorController {
 
     @GET
     @Path("/{id}")
-    @Produces(MediaType.APPLICATION_XML)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Consultar Profesor por ID", description = "Este endpoint permite consultar un profesor por su ID")
-    public Response consultarPorId(@PathParam("id") Integer id) {
-        return Response.status(Response.Status.OK).entity(this.iProfesorService.buscarPorId(id)).build();
+    public Response consultarPorId(@PathParam("id") Integer id, @Context UriInfo uriInfo) {
+        ProfesorTo profesorTo = this.iProfesorService.buscarPorId(id, uriInfo);
+        return Response.status(227).entity(profesorTo).build();
     }
 
     @GET
@@ -52,29 +61,31 @@ public class ProfesorController {
                 .build();
     }
 
-    @PATCH
-    @Path("/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response actualizarParcial(@RequestBody Profesor profesor, @PathParam("id") Integer id) {
-        Profesor p = this.iProfesorService.buscarPorId(id);
+    // @PATCH
+    // @Path("/{id}")
+    // @Consumes(MediaType.APPLICATION_JSON)
+    // @Produces(MediaType.APPLICATION_JSON)
+    // public Response actualizarParcial(@RequestBody Profesor profesor,
+    // @PathParam("id") Integer id) {
+    // Profesor p = this.iProfesorService.buscarPorId(id);
 
-        if (profesor.getNombre() != null)
-            p.setNombre(profesor.getNombre());
-        if (profesor.getApellido() != null)
-            p.setApellido(profesor.getApellido());
-        if (profesor.getFechaNacimiento() != null)
-            p.setFechaNacimiento(profesor.getFechaNacimiento());
-        if (profesor.getEmail() != null)
-            p.setEmail(profesor.getEmail());
-        if (profesor.getSalario() != null)
-            p.setSalario(profesor.getSalario());
+    // if (profesor.getNombre() != null)
+    // p.setNombre(profesor.getNombre());
+    // if (profesor.getApellido() != null)
+    // p.setApellido(profesor.getApellido());
+    // if (profesor.getFechaNacimiento() != null)
+    // p.setFechaNacimiento(profesor.getFechaNacimiento());
+    // if (profesor.getEmail() != null)
+    // p.setEmail(profesor.getEmail());
+    // if (profesor.getSalario() != null)
+    // p.setSalario(profesor.getSalario());
 
-        this.iProfesorService.actualizarParcialPorId(p);
-        return Response.status(Response.Status.OK).entity("Profesor con id " + id + " actualizado parcialmente")
-                .build();
+    // this.iProfesorService.actualizarParcialPorId(p);
+    // return Response.status(Response.Status.OK).entity("Profesor con id " + id + "
+    // actualizado parcialmente")
+    // .build();
 
-    }
+    // }
 
     @DELETE
     @Path("/{id}")
@@ -89,5 +100,23 @@ public class ProfesorController {
         return Response.status(Response.Status.OK)
                 .entity("Profesor con id " + id + " eliminado correctamente")
                 .build();
+    }
+
+    @GET
+    @Path("/{id}/hijos")
+    public List<Hijo> obtenerHijosPorId(@PathParam("id") Integer id) {
+
+        Hijo h1 = new Hijo();
+        h1.setNombre("paco");
+
+        Hijo h2 = new Hijo();
+        h2.setNombre("tommy");
+
+        List<Hijo> hijos = new ArrayList<>();
+        hijos.add(h1);
+        hijos.add(h2);
+
+        return hijos;
+
     }
 }
