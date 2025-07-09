@@ -5,6 +5,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @XmlRootElement
 @Entity
@@ -23,6 +24,8 @@ public class Estudiante {
   private LocalDateTime fechaNacimiento;
   @Column(name = "estu_genero")
   private String genero;
+  @OneToMany(mappedBy = "estudiante")
+  private List<Hijo> hijos;
 
   // SETTERS Y GETTERS
 

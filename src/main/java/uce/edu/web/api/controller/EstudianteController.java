@@ -14,15 +14,18 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import uce.edu.web.api.repository.modelo.Estudiante;
 import uce.edu.web.api.repository.modelo.Hijo;
+import uce.edu.web.api.service.HijoService;
 import uce.edu.web.api.service.IEstudianteService;
 import uce.edu.web.api.service.to.EstudianteTo;
 
 // SERVICIO
 @Path("/estudiantes")
-public class EstudianteController extends BaseControlador {
+public class EstudianteController {
 
     @Inject
     private IEstudianteService iEstudianteService;
+
+    private HijoService hijoService;
 
     // CAPACIDADES DEL SERVICIO
     @GET
@@ -106,18 +109,6 @@ public class EstudianteController extends BaseControlador {
     @GET
     @Path("/{id}/hijos")
     public List<Hijo> obtenerHijosPorId(@PathParam("id") Integer id) {
-
-        Hijo h1 = new Hijo();
-        h1.setNombre("pepito");
-
-        Hijo h2 = new Hijo();
-        h2.setNombre("juanito");
-
-        List<Hijo> hijos = new ArrayList<>();
-        hijos.add(h1);
-        hijos.add(h2);
-
-        return hijos;
-
+        return this.hijoService.buscarPorEstudianteId(id);
     }
 }
