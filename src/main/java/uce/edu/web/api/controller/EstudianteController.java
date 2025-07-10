@@ -7,7 +7,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -16,6 +15,7 @@ import uce.edu.web.api.repository.modelo.Estudiante;
 import uce.edu.web.api.repository.modelo.Hijo;
 import uce.edu.web.api.service.HijoService;
 import uce.edu.web.api.service.IEstudianteService;
+import uce.edu.web.api.service.mapper.EstudianteMapper;
 import uce.edu.web.api.service.to.EstudianteTo;
 
 // SERVICIO
@@ -25,6 +25,7 @@ public class EstudianteController {
     @Inject
     private IEstudianteService iEstudianteService;
 
+    @Inject
     private HijoService hijoService;
 
     // CAPACIDADES DEL SERVICIO
@@ -36,7 +37,8 @@ public class EstudianteController {
     public Response consultarPorId(@PathParam("id") Integer id, @Context UriInfo uriInfo) {
         // return this.iEstudianteService.buscarPorId(id);
 
-        EstudianteTo estudianteTo = this.iEstudianteService.buscarPorId(id, uriInfo);
+        EstudianteTo estudianteTo = EstudianteMapper.toTo(this.iEstudianteService.buscarPorId(id));
+        estudianteTo.buidUri(uriInfo);
 
         return Response.status(227).entity(estudianteTo).build();
     }

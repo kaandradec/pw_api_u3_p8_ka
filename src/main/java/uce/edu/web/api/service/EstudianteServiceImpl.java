@@ -16,12 +16,13 @@ public class EstudianteServiceImpl implements IEstudianteService {
     private IEstudianteRepo iEstudianteRepo;
 
     @Override
-    public EstudianteTo buscarPorId(Integer id, UriInfo uriInfo) {
-        Estudiante e1 = this.iEstudianteRepo.seleccionarPorId(id);
-        EstudianteTo estudianteTo = new EstudianteTo(e1.getId(), e1.getNombre(), e1.getApellido(),
-                e1.getFechaNacimiento(), e1.getGenero(), uriInfo);
+    public Estudiante buscarPorId(Integer id) {
+        // Estudiante e1 = this.iEstudianteRepo.seleccionarPorId(id);
+        // EstudianteTo estudianteTo = new EstudianteTo(e1.getId(), e1.getNombre(),
+        // e1.getApellido(),
+        // e1.getFechaNacimiento(), e1.getGenero(), uriInfo);
 
-        return estudianteTo;
+        return this.iEstudianteRepo.seleccionarPorId(id);
         // return this.iEstudianteRepo.seleccionarPorId(id);
     }
 
