@@ -1,8 +1,8 @@
 package uce.edu.web.api.repository.modelo;
 
-import java.time.LocalDateTime;
-
 import jakarta.xml.bind.annotation.adapters.XmlAdapter;
+
+import java.time.LocalDateTime;
 
 public class LocalDateTimeAdapter extends XmlAdapter<String, LocalDateTime> {
     @Override

@@ -6,6 +6,7 @@ import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @XmlRootElement
 @Entity
@@ -27,6 +28,8 @@ public class Profesor {
     private BigDecimal salario;
     @Column(name = "prof_genero")
     private String genero;
+    @OneToMany(mappedBy = "profesor")
+    private List<Hijo> hijos;
 
     // SETTERS Y GETTERS
     public Integer getId() {
@@ -84,5 +87,13 @@ public class Profesor {
 
     public void setGenero(String genero) {
         this.genero = genero;
+    }
+
+    public List<Hijo> getHijos() {
+        return hijos;
+    }
+
+    public void setHijos(List<Hijo> hijos) {
+        this.hijos = hijos;
     }
 }

@@ -6,9 +6,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
-
-import java.util.List;
-
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import uce.edu.web.api.repository.modelo.Estudiante;
@@ -19,6 +16,9 @@ import uce.edu.web.api.service.mapper.EstudianteMapper;
 import uce.edu.web.api.service.mapper.HijoMapper;
 import uce.edu.web.api.service.to.EstudianteTo;
 import uce.edu.web.api.service.to.HijoTo;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 // SERVICIO
 @Path("/estudiantes")
@@ -51,13 +51,17 @@ public class EstudianteController {
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Consultar Estudiantes", description = "Este endpoint permite consultar todos los estudiantes")
     public Response consultarTodos(@QueryParam("genero") String genero,
-            @QueryParam("provincia") String provincia) {
+            @QueryParam("provincia") String provincia, @Context UriInfo uriInfo) {
         System.out.println("Provincia query param:" + provincia);
 
         List<Estudiante> estudiantes = this.iEstudianteService.buscarTodos(genero);
         List<EstudianteTo> estudiantesTo = estudiantes.stream()
-                .map(EstudianteMapper::toTo)
-                .collect(java.util.stream.Collectors.toList());
+                .map(est -> {
+                    EstudianteTo estudianteTo = EstudianteMapper.toTo(est);
+                    estudianteTo.buidUri(uriInfo);
+                    return estudianteTo;
+                })
+                .collect(Collectors.toList());
 
         return Response.status(Response.Status.OK).entity(estudiantesTo).build();
     }
