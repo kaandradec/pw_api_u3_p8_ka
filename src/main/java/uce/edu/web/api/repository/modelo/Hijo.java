@@ -27,7 +27,7 @@ public class Hijo {
     private String apellido;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY )
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hijo_estudiante")
     private Estudiante estudiante;
 
@@ -53,6 +53,14 @@ public class Hijo {
 
     public void setApellido(String apellido) {
         this.apellido = apellido;
+    }
+
+    public Estudiante getEstudiante() {
+        return estudiante;
+    }
+
+    public void setEstudiante(Estudiante estudiante) {
+        this.estudiante = estudiante;
     }
 
 }

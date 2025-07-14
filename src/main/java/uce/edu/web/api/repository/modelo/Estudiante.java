@@ -70,4 +70,12 @@ public class Estudiante {
     this.genero = genero;
   }
 
+  public List<Hijo> getHijos() {
+    return hijos;
+  }
+
+  public void setHijos(List<Hijo> hijos) {
+    this.hijos = hijos;
+  }
+
 }

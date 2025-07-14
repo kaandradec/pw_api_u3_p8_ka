@@ -16,7 +16,9 @@ import uce.edu.web.api.repository.modelo.Hijo;
 import uce.edu.web.api.service.HijoService;
 import uce.edu.web.api.service.IEstudianteService;
 import uce.edu.web.api.service.mapper.EstudianteMapper;
+import uce.edu.web.api.service.mapper.HijoMapper;
 import uce.edu.web.api.service.to.EstudianteTo;
+import uce.edu.web.api.service.to.HijoTo;
 
 // SERVICIO
 @Path("/estudiantes")
@@ -46,51 +48,77 @@ public class EstudianteController {
     // ?genero=M&provincia=pichincha
     @GET
     @Path("")
-    // @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Consultar Estudiantes", description = "Este endpoint permite consultar todos los estudiantes")
     public Response consultarTodos(@QueryParam("genero") String genero,
             @QueryParam("provincia") String provincia) {
         System.out.println("Provincia query param:" + provincia);
-        // return this.iEstudianteService.buscarTodos(genero);
 
-        return Response.status(Response.Status.OK).entity(this.iEstudianteService.buscarTodos(genero)).build();
+        List<Estudiante> estudiantes = this.iEstudianteService.buscarTodos(genero);
+        List<EstudianteTo> estudiantesTo = estudiantes.stream()
+                .map(EstudianteMapper::toTo)
+                .collect(java.util.stream.Collectors.toList());
+
+        return Response.status(Response.Status.OK).entity(estudiantesTo).build();
     }
 
     // El recurso se lo envia en el body, @RequestBody opcional
     @POST
     @Path("")
-    // @Consumes(MediaType.APPLICATION_JSON) // MediaType de Jakarta
-    // @Consumes(MediaType.APPLICATION_JSON) // MediaType de Jakarta
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Guardar Estudiantes", description = "Este endpoint permite guardar un nuevo estudiante")
-    public void guardar(@RequestBody Estudiante estudiante) {
-        this.iEstudianteService.actualizarParcialPorId(estudiante);
+    public Response guardar(@RequestBody EstudianteTo estudianteTo) {
+        Estudiante estudiante = EstudianteMapper.toEntity(estudianteTo);
+        this.iEstudianteService.guardar(estudiante);
+        return Response.status(Response.Status.CREATED).build();
     }
 
     @PUT
-    // @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{id}")
-    public void actualizarPorId(@RequestBody Estudiante estudiante, @PathParam("id") Integer id) {
-        estudiante.setId(id);
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response actualizarPorId(@RequestBody EstudianteTo estudianteTo, @PathParam("id") Integer id) {
+        estudianteTo.setId(id);
+        Estudiante estudiante = EstudianteMapper.toEntity(estudianteTo);
         this.iEstudianteService.actualizarPorId(estudiante);
+        return Response.status(Response.Status.OK).build();
     }
 
-    // @PATCH
-    // // @Consumes(MediaType.APPLICATION_JSON)
-    // @Path("/{id}")
-    // public void actualizarParcial(@RequestBody Estudiante estudiante,
-    // @PathParam("id") Integer id) {
-    // estudiante.setId(id);
+    @PATCH
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Actualizar Parcialmente Estudiante", description = "Este endpoint permite actualizar parcialmente un estudiante")
+    public Response actualizarParcial(@RequestBody EstudianteTo estudianteTo, @PathParam("id") Integer id) {
+        // Buscar el estudiante existente
+        Estudiante estudianteExistente = this.iEstudianteService.buscarPorId(id);
 
-    // Estudiante est = this.iEstudianteService.buscarPorId(id);
-    // if (estudiante.getApellido() != null)
-    // est.setApellido(estudiante.getApellido());
-    // if (estudiante.getNombre() != null)
-    // est.setNombre(estudiante.getNombre());
-    // if (estudiante.getFechaNacimiento() != null)
-    // est.setFechaNacimiento(estudiante.getFechaNacimiento());
+        if (estudianteExistente == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("Estudiante no encontrado")
+                    .build();
+        }
 
-    // this.iEstudianteService.actualizarParcialPorId(est);
-    // }
+        if (estudianteTo.getNombre() != null) {
+            estudianteExistente.setNombre(estudianteTo.getNombre());
+        }
+        if (estudianteTo.getApellido() != null) {
+            estudianteExistente.setApellido(estudianteTo.getApellido());
+        }
+        if (estudianteTo.getFechaNacimiento() != null) {
+            estudianteExistente.setFechaNacimiento(estudianteTo.getFechaNacimiento());
+        }
+        if (estudianteTo.getGenero() != null) {
+            estudianteExistente.setGenero(estudianteTo.getGenero());
+        }
+
+        this.iEstudianteService.actualizarParcialPorId(estudianteExistente);
+
+        return Response.status(Response.Status.OK)
+                .entity("Estudiante con id " + id + " actualizado parcialmente")
+                .build();
+    }
 
     @DELETE
     // @Produces(MediaType.APPLICATION_JSON)
@@ -110,7 +138,21 @@ public class EstudianteController {
 
     @GET
     @Path("/{id}/hijos")
-    public List<Hijo> obtenerHijosPorId(@PathParam("id") Integer id) {
-        return this.hijoService.buscarPorEstudianteId(id);
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response obtenerHijosPorId(@PathParam("id") Integer id) {
+        // Verificar que el estudiante existe
+        Estudiante estudiante = this.iEstudianteService.buscarPorId(id);
+        if (estudiante == null) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("Estudiante no encontrado")
+                    .build();
+        }
+
+        List<Hijo> hijos = this.hijoService.buscarPorEstudianteId(id);
+        List<HijoTo> hijosTo = hijos.stream()
+                .map(HijoMapper::toTo)
+                .collect(java.util.stream.Collectors.toList());
+
+        return Response.status(Response.Status.OK).entity(hijosTo).build();
     }
 }
