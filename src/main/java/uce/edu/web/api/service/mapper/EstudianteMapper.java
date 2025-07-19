@@ -5,6 +5,10 @@ import uce.edu.web.api.service.to.EstudianteTo;
 
 public class EstudianteMapper {
     public static EstudianteTo toTo(Estudiante estudiante) {
+        if (estudiante == null) {
+            return null;
+        }
+
         EstudianteTo estTo = new EstudianteTo();
         estTo.setId(estudiante.getId());
         estTo.setNombre(estudiante.getNombre());

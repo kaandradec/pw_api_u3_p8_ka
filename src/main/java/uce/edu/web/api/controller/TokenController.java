@@ -12,7 +12,7 @@ public class TokenController {
     @GET
     @Path("")
     public String generar() {
-        return Jwt.issuer("http://uce.edu.ec").upn("micorreo@uce.edu.ec").groups("admins")
+        return Jwt.issuer("http://uce.edu.ec").upn("micorreo@uce.edu.ec").groups("admin")
                 .expiresIn(Duration.ofSeconds(30)).sign();
     }
 

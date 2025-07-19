@@ -53,7 +53,7 @@ public class EstudianteController {
         // return this.iEstudianteService.buscarPorId(id);
 
         EstudianteTo estudianteTo = EstudianteMapper.toTo(this.iEstudianteService.buscarPorId(id));
-        estudianteTo.buidUri(uriInfo);
+        estudianteTo.buildUri(uriInfo);
 
         return Response.status(227).entity(estudianteTo).build();
     }
@@ -71,7 +71,7 @@ public class EstudianteController {
         List<EstudianteTo> estudiantesTo = estudiantes.stream()
                 .map(est -> {
                     EstudianteTo estudianteTo = EstudianteMapper.toTo(est);
-                    estudianteTo.buidUri(uriInfo);
+                    estudianteTo.buildUri(uriInfo);
                     return estudianteTo;
                 })
                 .collect(Collectors.toList());
